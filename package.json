@@ -1,0 +1,23 @@
+{
+  "name": "arby",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "-": "^0.0.1",
+    "D": "^1.0.0",
+    "express": "^4.17.2",
+    "pm2": "^5.1.2",
+    "serve-favicon": "^2.5.0",
+    "tailwindcss": "^3.0.16"
+  }
+}
