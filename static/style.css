@@ -51,3 +51,16 @@ button {
 .logotitle {
     display: block;
 }
+.form-select {
+    width: 50% !important;
+    overflow: hidden;
+    display: inline-block !important;
+    text-overflow: ellipsis; /* Adds an ellipsis if the text is too long */
+    white-space: nowrap; /* Prevents the text from wrapping */
+}
+
+#sportsDropdowns {
+    text-align: center; /* Center the dropdowns */
+    padding: 10px 0; /* Add some vertical padding */
+    margin: 2% auto;
+}

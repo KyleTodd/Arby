@@ -17,7 +17,7 @@
             <div class="logotitle">
             <img src="/static/arbylogo.png" class="logo">
             </div>
-            <div class="sport_choices" id="sportsButtons"></div>
+            <div class="sportsButtons" id="sportsDropdowns"></div>
             </div>
             <table  class="table table-bordered table-dark table-hover">
 
@@ -48,24 +48,40 @@
 var allOdds = [];
 var rowCount = document.getElementById('oddsTable').rows.length;
 
-function createButtons() {
+function createDropdowns() {
     fetch('/get_sports')
     .then(response => response.json())
-    .then(data => {
-        const sportsDiv = document.getElementById('sportsButtons');
-        data.forEach(sport => {
-            const button = document.createElement('button');
-            button.innerText = sport.title;
-            button.className = 'btn btn-light btn-sm';
-            button.style.margin = '0 10px 5px 5px';
-            button.onclick = () => getOdds(sport.key);
-            sportsDiv.appendChild(button);
+    .then(groups => {
+        const dropdownsDiv = document.getElementById('sportsDropdowns');
+
+        Object.keys(groups).forEach(group => {
+            // Create a dropdown for each group
+            const dropdown = document.createElement('select');
+            dropdown.className = 'form-select';
+            dropdown.onchange = (e) => getOdds(e.target.value);
+
+            // Default option
+            const defaultOption = document.createElement('option');
+            defaultOption.innerText = group;
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            dropdown.appendChild(defaultOption);
+
+            // Add sports to the dropdown
+            groups[group].forEach(sport => {
+                const option = document.createElement('option');
+                option.value = sport.key;
+                option.innerText = sport.title;
+                dropdown.appendChild(option);
+            });
+
+            dropdownsDiv.appendChild(dropdown);
         });
     })
     .catch(error => console.error('Error:', error));
 }
 
-window.onload = createButtons;
+window.onload = createDropdowns;
 
 function returnOdds(sport){
     let request = new XMLHttpRequest();

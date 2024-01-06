@@ -17,14 +17,24 @@ CORS(app)
 def serve_home():
     return send_from_directory('static', 'index.html')
 
+
+EXCLUDED_GROUPS = ['Soccer', 'Ice Hockey','Mixed Martial Arts','Politics','Golf']  # Exclude these until I integrate 3 option sports
+
 @app.route('/get_sports')
 def get_active_sports():
     response = requests.get("https://api.the-odds-api.com/v4/sports/?apiKey="+API_KEY)
     sports_data = response.json()
 
-    # Extracting 'key' and 'title' from each sport
-    sports_list = [{"key": sport["key"], "title": sport["title"]} for sport in sports_data]
-    return jsonify(sports_list)
+    sports_groups = {}
+    for sport in sports_data:
+        group = sport['group']
+        if group in EXCLUDED_GROUPS:  # Skip the groups that are in the exclusion list
+            continue
+        if group not in sports_groups:
+            sports_groups[group] = []
+        sports_groups[group].append({"key": sport["key"], "title": sport["title"]})
+
+    return jsonify(sports_groups)
 
 # sport = ['cricket_big_bash']
 completed_sports = []
