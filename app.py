@@ -198,7 +198,7 @@ def get_sports():
 if __name__ == "__main__":
     with app.app_context():
         print('App is about to start!')
-    eport = int(os.environ.get("PORT", 5000))
+    eport = int(os.getenv("PORT", 5000))
     app.run(host='0.0.0.0', port=eport, debug=False)
 
      
