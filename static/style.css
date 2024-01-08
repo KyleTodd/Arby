@@ -64,3 +64,11 @@ button {
     padding: 10px 0; /* Add some vertical padding */
     margin: 2% auto;
 }
+
+#reqcount {
+    color: white;
+    font-size: 150%;
+    text-align: center;
+    padding-top: 1%;
+    padding-bottom: 1%;
+}

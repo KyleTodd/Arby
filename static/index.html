@@ -18,9 +18,10 @@
             <img src="/static/arbylogo.png" class="logo">
             </div>
             <div class="sportsButtons" id="sportsDropdowns"></div>
-            </div>
+            <p id="reqcount"></p>         
+        </div>
             <table  class="table table-bordered table-dark table-hover">
-
+            
             <thead class="thead-dark">
            
             <tr>
@@ -48,11 +49,23 @@
 var allOdds = [];
 var rowCount = document.getElementById('oddsTable').rows.length;
 
+async function getPort() {
+    try {
+        const response = await fetch('/config');
+        const data = await response.json();
+        return data.port;
+    } catch (error) {
+        console.error('Error fetching port:', error);
+        return "5000";  // Default to 5000 if there's an error
+    }
+}
+
 function createDropdowns() {
     fetch('/get_sports')
     .then(response => response.json())
     .then(groups => {
         const dropdownsDiv = document.getElementById('sportsDropdowns');
+
 
         Object.keys(groups).forEach(group => {
             // Create a dropdown for each group
@@ -83,13 +96,23 @@ function createDropdowns() {
 
 window.onload = createDropdowns;
 
-function returnOdds(sport){
+async function returnOdds(sport){
+    const port = await getPort();
+    console.log("Port is:", port);
     let request = new XMLHttpRequest();
-    request.open("GET", "http://127.0.0.1:5000/sports?type="+sport);
+    let url = "http://127.0.0.1:" + port + "/sports?type=" + sport;
+    console.log(url); 
+    request.open("GET", url);
     request.send();
    
     request.onload = () => {
         if (request.status = 200){
+            let response = JSON.parse(request.response);
+            var reqcount = response[2];
+            console.log('reqcount:', reqcount);
+            var reqcountElement = document.getElementById('reqcount');
+            reqcountElement.textContent = 'Requests left for the month: ' + reqcount;
+
             allOdds.push(JSON.parse(request.response));
             createTable(allOdds[0][0].length-1)
             allOdds = [];

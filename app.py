@@ -13,10 +13,18 @@ API_KEY = os.getenv("API")
 app = Flask(__name__)
 CORS(app)
 
+
+
+
 @app.route('/')
 def serve_home():
+    # return render_template('static', 'index.html', eport=os.getenv("PORT", 5000))
     return send_from_directory('static', 'index.html')
 
+
+@app.route('/config')
+def config():
+    return jsonify({"port": os.getenv("PORT", 5000)})
 
 EXCLUDED_GROUPS = ['Soccer', 'Ice Hockey','Mixed Martial Arts','Politics','Golf']  # Exclude these until I integrate 3 option sports
 
@@ -41,6 +49,7 @@ completed_sports = []
 
 @app.route('/sports')
 def get_sports():
+    
     sport = [request.args.get('type')]
     headers = []
     allArbOps = []
@@ -49,10 +58,8 @@ def get_sports():
         json_res = allGames.json()
         # sport = [request.args.get('type')]
         # print(json_res)
-        json_headers = allGames.headers['X-Requests-Remaining']
-        headers.append(json_headers)
-        print(json_headers)
-
+        reqcount = allGames.headers['X-Requests-Remaining']
+        
     # Loop through all matches
     catch=[]
 
@@ -190,7 +197,7 @@ def get_sports():
     print(json.dumps(allArbOps, sort_keys=False, indent= 4))
     completed_sports.append(sport)
     print(completed_sports)
-    return jsonify(allArbOps,headers)
+    return jsonify(allArbOps,headers,reqcount)
 
 
 
