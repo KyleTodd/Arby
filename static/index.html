@@ -17,6 +17,11 @@
             <div class="logotitle">
             <img src="/static/arbylogo.png" class="logo">
             </div>
+            <div class="description">
+                <br>Based on <a href="https://the-odds-api.com/">The Odds Api</a>, this progarm will search the available in-season sports selected and return true if there is an arbitrage opportunity to be exploited. 
+                The bet size is based on a $100 total bet and the return is the percentage of the bet that will be returned as a profit, not taking into account any fees. <br> <u>Please note that the content provided here is for informational purposes only and should not be construed as financial advice.</u>
+                </p>
+            </div>
             <div class="sportsButtons" id="sportsDropdowns"></div>
             <p id="reqcount"></p>         
         </div>
@@ -100,7 +105,7 @@ async function returnOdds(sport){
     const port = await getPort();
     console.log("Port is:", port);
     let request = new XMLHttpRequest();
-    let url = "http://127.0.0.1:" + port + "/sports?type=" + sport;
+    let url = "http://localhost:" + port + "/sports?type=" + sport;
     console.log(url); 
     request.open("GET", url);
     request.send();
@@ -111,7 +116,7 @@ async function returnOdds(sport){
             var reqcount = response[2];
             console.log('reqcount:', reqcount);
             var reqcountElement = document.getElementById('reqcount');
-            reqcountElement.textContent = 'Requests left for the month: ' + reqcount;
+            reqcountElement.textContent = 'API Requests left for the month: ' + reqcount;
 
             allOdds.push(JSON.parse(request.response));
             createTable(allOdds[0][0].length-1)
