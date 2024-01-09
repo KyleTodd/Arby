@@ -24,7 +24,7 @@ def serve_home():
 
 @app.route('/config')
 def config():
-    return jsonify({"port": os.getenv("PORT", 5000)})
+    return jsonify({"port": os.getenv("PORT", 5000),"baseUrl": os.getenv("BASE_URL", "http://localhost")})
 
 EXCLUDED_GROUPS = ['Soccer', 'Ice Hockey','Mixed Martial Arts','Politics','Golf']  # Exclude these until I integrate 3 option sports
 

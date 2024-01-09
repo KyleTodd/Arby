@@ -58,10 +58,27 @@ async function getPort() {
     try {
         const response = await fetch('/config');
         const data = await response.json();
-        return data.port;
+
+        if (data.port == "5000") {
+            return null;
+        }else{
+            return ":"+data.port;
+        }
+       
     } catch (error) {
         console.error('Error fetching port:', error);
         return "5000";  // Default to 5000 if there's an error
+    }
+}
+
+async function getUrl() {
+    try {
+        const response = await fetch('/config');
+        const data = await response.json();
+        return data.baseUrl;
+    } catch (error) {
+        console.error('Error fetching base url:', error);
+        return "http://localhost";  // Default to 5000 if there's an error
     }
 }
 
@@ -103,9 +120,11 @@ window.onload = createDropdowns;
 
 async function returnOdds(sport){
     const port = await getPort();
+    const baseurl = await getUrl();
     console.log("Port is:", port);
+    console.log("Base url is:", baseurl);
     let request = new XMLHttpRequest();
-    let url = "http://localhost:" + port + "/sports?type=" + sport;
+    let url = baseurl + port + "/sports?type=" + sport;
     console.log(url); 
     request.open("GET", url);
     request.send();
@@ -212,29 +231,6 @@ function sortTable(columnIndex) {
         }
     }
 }
-
-
-// function returnW(){
-//     let requestW = new XMLHttpRequest();
-//     requestW.open("GET", "https://api.open-meteo.com/v1/forecast?latitude=-33.87&longitude=151.21&hourly=temperature_2m");
-//     requestW.send();
-//     var allW = [];
-//     requestW.onload = () => {
-//         if (requestW.status = 200){
-//            allW.push(JSON.parse(requestW.response));
-//            document.write(Object.keys(allW).length);
-//            return Object.keys(allW).length;
-//         } else {
-//             console.log(`error ${requestW.status} ${requestW.statusText}`)
-//         }
-//     }
-    
-// }
-
-// function getW(){
-//     var WObject = returnW();
-//     console.log(WObject);  
-// }
 
 
 </script>
