@@ -57,7 +57,7 @@ To run the application:
 python app.py
 ```
 
-Access the application at `http://localhost:5000/`.
+Access the application at `http://localhost:[PORT]/`.
 
 ## Configuration
 
@@ -65,6 +65,7 @@ Set your API keys and other configurations in a `.env` file:
 
 ```
 API_KEY=your_api_key
+PORT=port (5000 reserved for hosting on the cloud)
 ```
 
 ## Contributing

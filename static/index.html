@@ -59,8 +59,8 @@ async function getPort() {
         const response = await fetch('/config');
         const data = await response.json();
 
-        if (data.port == "5000") {
-            return null;
+        if (data.port == "5000") { 
+            return '';
         }else{
             return ":"+data.port;
         }
