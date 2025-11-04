@@ -11,8 +11,9 @@ This tool is for informational purposes only and should not be considered as fin
 ## Features
 
 -   Fetches and displays live sports betting odds.
--   Identifies and calculates arbitrage opportunities.
--   Filters sports based on user preferences.
+-   Fetches and displays live horse racing odds from multiple regions.
+-   Identifies and calculates arbitrage opportunities for both sports and horse racing.
+-   Filters sports and racing regions based on user preferences.
 
 ## Installation
 
@@ -59,14 +60,36 @@ python app.py
 
 Access the application at `http://localhost:[PORT]/`.
 
+### Using the Application
+
+1. Open the web interface in your browser
+2. Select a sport from the dropdown menus to view betting arbitrage opportunities
+3. Select a region from the "Horse Racing" dropdown to view horse racing arbitrage opportunities
+4. The table will display potential arbitrage opportunities with:
+   - The two options (teams/runners) with the best odds
+   - The bookmakers offering those odds
+   - The combined ratio (below 100 indicates an arbitrage opportunity)
+   - Suggested bet amounts for a $100 total investment
+   - Expected guaranteed payout percentage
+
+**Note**: Horse racing arbitrage is calculated for the top 2 favorites in each race based on available bookmaker odds.
+
 ## Configuration
 
 Set your API keys and other configurations in a `.env` file:
 
 ```
-API_KEY=your_api_key
+API=your_odds_api_key
+RACING_API_USER=your_racing_api_username
+RACING_API_PASSWORD=your_racing_api_password
 PORT=port (5000 reserved for hosting on the cloud)
+BASE_URL=http://localhost
 ```
+
+### API Keys
+
+-   **The Odds API**: Get your API key from [https://the-odds-api.com/](https://the-odds-api.com/) for sports betting odds.
+-   **The Racing API**: Get your credentials from [https://www.theracingapi.com/](https://www.theracingapi.com/) for horse racing odds. You'll receive a username and password via email after subscription.
 
 ## Contributing
 
