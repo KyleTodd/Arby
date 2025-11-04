@@ -60,6 +60,20 @@ python app.py
 
 Access the application at `http://localhost:[PORT]/`.
 
+### Using the Application
+
+1. Open the web interface in your browser
+2. Select a sport from the dropdown menus to view betting arbitrage opportunities
+3. Select a region from the "Horse Racing" dropdown to view horse racing arbitrage opportunities
+4. The table will display potential arbitrage opportunities with:
+   - The two options (teams/runners) with the best odds
+   - The bookmakers offering those odds
+   - The combined ratio (below 100 indicates an arbitrage opportunity)
+   - Suggested bet amounts for a $100 total investment
+   - Expected guaranteed payout percentage
+
+**Note**: Horse racing arbitrage is calculated for the top 2 favorites in each race based on available bookmaker odds.
+
 ## Configuration
 
 Set your API keys and other configurations in a `.env` file:
