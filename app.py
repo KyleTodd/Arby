@@ -203,7 +203,9 @@ def get_racing_odds():
         return jsonify(all_arb_ops, [], None)
         
     except Exception as e:
-        return jsonify({"error": f"Error fetching racing data: {str(e)}"}), 500
+        # Log the full error for debugging but don't expose it to users
+        print(f"Error fetching racing data: {str(e)}")
+        return jsonify({"error": "Error fetching racing data. Please check your API credentials and try again."}), 500
 
 @app.route('/sports')
 def get_sports():
