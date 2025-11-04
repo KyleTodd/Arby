@@ -18,7 +18,7 @@
             <img src="/static/arbylogo.png" class="logo">
             </div>
             <div class="description">
-                <br>Based on <a href="https://the-odds-api.com/">The Odds Api</a>, this progarm will search the available in-season sports selected and return true if there is an arbitrage opportunity to be exploited. 
+                <br>Based on <a href="https://the-odds-api.com/">The Odds Api</a> (sports) and <a href="https://www.theracingapi.com/">The Racing API</a> (horse racing), this program will search the available in-season sports and racing events selected and return true if there is an arbitrage opportunity to be exploited. 
                 The bet size is based on a $100 total bet and the return is the percentage of the bet that will be returned as a profit, not taking into account any fees. <br> <u>Please note that the content provided here is for informational purposes only and should not be construed as financial advice.</u>
                 </p>
             </div>
@@ -30,16 +30,16 @@
             <thead class="thead-dark">
            
             <tr>
-                <th onclick="sortTable(0)">Away Team</th>
-                <th onclick="sortTable(1)">Away Broker</th>
-                <th onclick="sortTable(2)">Away Price</th>
-                <th onclick="sortTable(3)">Home Team</th>
-                <th onclick="sortTable(4)">Home Broker</th>
-                <th onclick="sortTable(5)">Home Price</th>
+                <th onclick="sortTable(0)">Option A</th>
+                <th onclick="sortTable(1)">Broker A</th>
+                <th onclick="sortTable(2)">Price A</th>
+                <th onclick="sortTable(3)">Option B</th>
+                <th onclick="sortTable(4)">Broker B</th>
+                <th onclick="sortTable(5)">Price B</th>
                 <th onclick="sortTable(6)">Ratio</th>
                 <th onclick="sortTable(7)">Opportunity</th>
-                <th onclick="sortTable(8)">Away Bet</th>
-                <th onclick="sortTable(9)">Home Bet</th>
+                <th onclick="sortTable(8)">Bet A</th>
+                <th onclick="sortTable(9)">Bet B</th>
                 <th onclick="sortTable(10)">Guaranteed Payout %</th>
             </tr>
             </thead>
@@ -83,11 +83,11 @@ async function getUrl() {
 }
 
 function createDropdowns() {
+    // Fetch regular sports
     fetch('/get_sports')
     .then(response => response.json())
     .then(groups => {
         const dropdownsDiv = document.getElementById('sportsDropdowns');
-
 
         Object.keys(groups).forEach(group => {
             // Create a dropdown for each group
@@ -107,6 +107,38 @@ function createDropdowns() {
                 const option = document.createElement('option');
                 option.value = sport.key;
                 option.innerText = sport.title;
+                dropdown.appendChild(option);
+            });
+
+            dropdownsDiv.appendChild(dropdown);
+        });
+    })
+    .catch(error => console.error('Error:', error));
+
+    // Fetch horse racing regions
+    fetch('/get_racing_regions')
+    .then(response => response.json())
+    .then(groups => {
+        const dropdownsDiv = document.getElementById('sportsDropdowns');
+
+        Object.keys(groups).forEach(group => {
+            // Create a dropdown for horse racing
+            const dropdown = document.createElement('select');
+            dropdown.className = 'form-select';
+            dropdown.onchange = (e) => getRacingOdds(e.target.value);
+
+            // Default option
+            const defaultOption = document.createElement('option');
+            defaultOption.innerText = group;
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            dropdown.appendChild(defaultOption);
+
+            // Add regions to the dropdown
+            groups[group].forEach(region => {
+                const option = document.createElement('option');
+                option.value = region.key;
+                option.innerText = region.title;
                 dropdown.appendChild(option);
             });
 
@@ -197,6 +229,54 @@ function createTable(tableRowAmount) {
 
 function getOdds(sport){
     const oddsObject = returnOdds(sport);
+    console.log(oddsObject);
+}
+
+async function returnRacingOdds(region){
+    const port = await getPort();
+    const baseurl = await getUrl();
+    console.log("Port is:", port);
+    console.log("Base url is:", baseurl);
+    let request = new XMLHttpRequest();
+    let url = baseurl + port + "/racing_odds?region=" + region;
+    console.log(url); 
+    request.open("GET", url);
+    request.send();
+   
+    request.onload = () => {
+        if (request.status == 200){
+            let response = JSON.parse(request.response);
+            console.log('Racing odds response:', response);
+            
+            // Handle error responses
+            if (response.error) {
+                alert('Error: ' + response.error);
+                return;
+            }
+            
+            allOdds.push(response);
+            if (allOdds[0][0] && allOdds[0][0].length > 0) {
+                createTable(allOdds[0][0].length-1);
+            } else {
+                // Clear table if no data
+                rowCount = document.getElementById('oddsTable').rows.length;
+                while (rowCount > 0) {
+                    document.getElementById("oddsTable").deleteRow(-1);
+                    rowCount = document.getElementById('oddsTable').rows.length;
+                }
+                alert('No racing data available for this region today.');
+            }
+            allOdds = [];
+        } else {
+            console.log(`error ${request.status} ${request.statusText}`);
+            alert('Error loading racing odds. Please check API configuration.');
+        }
+    }
+    return allOdds;
+}
+
+function getRacingOdds(region){
+    const oddsObject = returnRacingOdds(region);
     console.log(oddsObject);
 }
 
