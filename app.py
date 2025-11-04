@@ -65,6 +65,22 @@ def get_active_sports():
 # sport = ['cricket_big_bash']
 completed_sports = []
 
+def calculate_racing_bet(return_pct, odds_a, odds_b):
+    """Calculate bet amounts and payouts for racing arbitrage"""
+    bet_total = 100
+    return_value = (1 + float(return_pct)/100) * bet_total
+    bet_a = return_value / odds_a
+    bet_b = return_value / odds_b
+    payout_a = bet_a * odds_a
+    payout_b = bet_b * odds_b
+    
+    return {
+        'bet_a': f"{bet_a:.2f}",
+        'bet_b': f"{bet_b:.2f}",
+        'payout_a': f"{payout_a:.2f}",
+        'payout_b': f"{payout_b:.2f}"
+    }
+
 @app.route('/racing_odds')
 def get_racing_odds():
     """Get horse racing odds and calculate arbitrage opportunities"""
@@ -159,22 +175,6 @@ def get_racing_odds():
                 arb_pct = 100 - arb_value
                 arb_available = arb_value < 100
                 
-                # Calculate bet amounts for $100 total
-                def calculate_racing_bet(return_pct, odds_a, odds_b):
-                    bet_total = 100
-                    return_value = (1 + float(return_pct)/100) * bet_total
-                    bet_a = return_value / odds_a
-                    bet_b = return_value / odds_b
-                    payout_a = bet_a * odds_a
-                    payout_b = bet_b * odds_b
-                    
-                    return {
-                        'bet_a': f"{bet_a:.2f}",
-                        'bet_b': f"{bet_b:.2f}",
-                        'payout_a': f"{payout_a:.2f}",
-                        'payout_b': f"{payout_b:.2f}"
-                    }
-                
                 bet_info = calculate_racing_bet(arb_pct, odds1, odds2)
                 
                 all_arb_ops.append({
@@ -198,7 +198,9 @@ def get_racing_odds():
                 print(f"Error processing race: {e}")
                 continue
         
-        return jsonify(all_arb_ops, [], None)  # Format: [data, headers, reqcount]
+        # Return format matches /sports endpoint: [data, headers, reqcount]
+        # This maintains consistency with existing frontend code
+        return jsonify(all_arb_ops, [], None)
         
     except Exception as e:
         return jsonify({"error": f"Error fetching racing data: {str(e)}"}), 500
